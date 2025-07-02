@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  python:
+    build:
+      context: ./python
+      dockerfile: Dockerfile
+    container_name: sharepoint-folder-size-python
+    volumes:
+      - ./output:/output
+    environment:
+      - TENANT_ID=${TENANT_ID}
+      - CLIENT_ID=${CLIENT_ID}
+      - CLIENT_SECRET=${CLIENT_SECRET}
+      - SITE_URL=${SITE_URL}
+      - FOLDER_PATH=${FOLDER_PATH}
+    command: >
+      python sharepoint_folder_size.py
+      --tenant-id "${TENANT_ID}"
+      --client-id "${CLIENT_ID}"
+      --site-url "${SITE_URL}"
+      --folder-path "${FOLDER_PATH}"
+      --output-csv /output/folder_sizes_python.csv
+      --output-json /output/folder_sizes_python.json
+    stdin_open: true
+    tty: true
+
+  nodejs:
+    build:
+      context: ./nodejs
+      dockerfile: Dockerfile
+    container_name: sharepoint-folder-size-nodejs
+    volumes:
+      - ./output:/output
+    environment:
+      - TENANT_ID=${TENANT_ID}
+      - CLIENT_ID=${CLIENT_ID}
+      - CLIENT_SECRET=${CLIENT_SECRET}
+      - SITE_URL=${SITE_URL}
+      - FOLDER_PATH=${FOLDER_PATH}
+    command: >
+      node sharepoint-folder-size.js
+      --tenant-id "${TENANT_ID}"
+      --client-id "${CLIENT_ID}"
+      --site-url "${SITE_URL}"
+      --folder-path "${FOLDER_PATH}"
+      --output-csv /output/folder_sizes_nodejs.csv
+      --output-json /output/folder_sizes_nodejs.json
+    stdin_open: true
+    tty: true

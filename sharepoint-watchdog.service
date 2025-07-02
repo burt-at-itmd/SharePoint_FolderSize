@@ -1,0 +1,26 @@
+[Unit]
+Description=SharePoint Folder Size Calculator Watchdog
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=30
+User=YOUR_USER
+Group=YOUR_GROUP
+WorkingDirectory=/project/JasonAuroraSP/sharepoint-folder-size
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+
+# Load environment from .env file
+EnvironmentFile=/project/JasonAuroraSP/sharepoint-folder-size/.env
+
+# Run the watchdog script
+ExecStart=/bin/bash /project/JasonAuroraSP/sharepoint-folder-size/watchdog.sh
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
